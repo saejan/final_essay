@@ -4,64 +4,666 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>AI 자기소개서 합격률 분석</title>
+
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
-    label { font-weight: 600; }
-    input, textarea, button { width: 520px; max-width: 100%; padding: 10px; margin-top: 6px; }
-    textarea { height: 220px; }
-    button { width: auto; cursor: pointer; }
-    .row { margin: 14px 0; }
-    #resultBox { white-space: pre-wrap; border: 1px solid #ddd; padding: 12px; margin-top: 16px; width: 520px; max-width: 100%; }
-    .muted { color: #666; font-size: 12px; margin-top: 6px; }
+    :root{
+      --bg: #0b1020;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.10);
+      --border: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --muted2: rgba(255,255,255,.55);
+      --shadow: 0 16px 50px rgba(0,0,0,.40);
+      --radius: 18px;
+      --radius2: 14px;
+      --accent: #7c3aed;
+      --accent2: #06b6d4;
+      --danger: #ef4444;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background:
+        radial-gradient(1000px 600px at 15% 10%, rgba(124,58,237,.35), transparent 55%),
+        radial-gradient(900px 600px at 85% 15%, rgba(6,182,212,.25), transparent 55%),
+        radial-gradient(1000px 700px at 50% 120%, rgba(34,197,94,.10), transparent 55%),
+        linear-gradient(180deg, #080b16, #0b1020 30%, #090d1a);
+      overflow-x: hidden;
+    }
+
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 56px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .brand{
+      display:flex; align-items:center; gap: 12px;
+    }
+    .logo{
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(6,182,212,.85));
+      box-shadow: 0 12px 30px rgba(124,58,237,.25);
+      position: relative;
+      overflow:hidden;
+    }
+    .logo::after{
+      content:"";
+      position:absolute; inset:-30%;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.65), transparent 45%);
+      transform: rotate(15deg);
+    }
+    .brand h1{
+      font-size: 18px;
+      margin: 0;
+      letter-spacing: -0.2px;
+      line-height: 1.1;
+    }
+    .brand p{
+      margin: 2px 0 0;
+      font-size: 12.5px;
+      color: var(--muted2);
+    }
+
+    .pill{
+      display:flex; align-items:center; gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 22px rgba(0,0,0,.25);
+      color: var(--muted);
+      font-size: 12.5px;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .dot{
+      width: 9px; height: 9px;
+      border-radius: 999px;
+      background: var(--ok);
+      box-shadow: 0 0 0 6px rgba(34,197,94,.12);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 16px;
+      align-items:start;
+    }
+
+    @media (max-width: 960px){
+      .grid{ grid-template-columns: 1fr; }
+      .pill{ display:none; }
+    }
+
+    .card{
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.05));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .cardHeader{
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
+    }
+    .cardHeader h2{
+      font-size: 14px;
+      margin: 0;
+      color: rgba(255,255,255,.90);
+      letter-spacing: -0.1px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .badge{
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.75);
+    }
+
+    .cardBody{ padding: 16px; }
+
+    .fieldRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 640px){
+      .fieldRow{ grid-template-columns: 1fr; }
+    }
+
+    label{
+      display:block;
+      font-size: 12px;
+      color: var(--muted2);
+      margin: 0 0 6px;
+    }
+    input, textarea{
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      padding: 12px 12px;
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+      font-size: 14px;
+    }
+    textarea{ min-height: 220px; resize: vertical; }
+    input:focus, textarea:focus{
+      border-color: rgba(124,58,237,.55);
+      box-shadow: 0 0 0 4px rgba(124,58,237,.18);
+    }
+    .help{
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted2);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      align-items:center;
+      justify-content: space-between;
+    }
+    .leftActions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+
+    .btn{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+      font-size: 13px;
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      user-select:none;
+    }
+    .btn:hover{
+      background: rgba(255,255,255,.09);
+      border-color: rgba(255,255,255,.20);
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .btnPrimary{
+      background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(6,182,212,.75));
+      border: 0;
+      box-shadow: 0 14px 30px rgba(124,58,237,.20);
+    }
+    .btnPrimary:hover{ filter: brightness(1.05); }
+    .btnDanger{
+      background: rgba(239,68,68,.12);
+      border-color: rgba(239,68,68,.22);
+      color: rgba(255,255,255,.92);
+    }
+
+    .hintRight{
+      font-size: 12px;
+      color: var(--muted2);
+    }
+
+    .rightCard .cardBody{ padding: 0; }
+    .resultTop{
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .scoreWrap{
+      display:flex;
+      align-items:baseline;
+      gap: 10px;
+      min-width: 0;
+    }
+    .score{
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .scoreMeta{
+      color: var(--muted2);
+      font-size: 12.5px;
+      white-space: nowrap;
+    }
+
+    .progress{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      margin-top: 10px;
+    }
+    .bar{
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(239,68,68,.85), rgba(245,158,11,.85), rgba(34,197,94,.85));
+      border-radius: 999px;
+      transition: width .45s ease;
+    }
+
+    .resultBody{
+      padding: 16px;
+    }
+    .resultText{
+      white-space: pre-wrap;
+      line-height: 1.65;
+      font-size: 14px;
+      color: rgba(255,255,255,.88);
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      padding: 14px;
+      min-height: 230px;
+    }
+
+    .resultActions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(15,23,42,.92);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.92);
+      padding: 10px 12px;
+      border-radius: 999px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.45);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .2s ease, transform .2s ease;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-6px);
+    }
+
+    .spinner{
+      width: 14px; height: 14px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: rgba(255,255,255,.95);
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin{ to { transform: rotate(360deg); } }
+
+    .mini{
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: rgba(255,255,255,.65);
+    }
+
+    .footer{
+      margin-top: 14px;
+      color: rgba(255,255,255,.45);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .kpi{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .kpiItem{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      padding: 12px;
+      min-height: 68px;
+    }
+    .kpiLabel{
+      font-size: 11.5px;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 6px;
+    }
+    .kpiValue{
+      font-size: 14px;
+      color: rgba(255,255,255,.88);
+      font-weight: 600;
+      letter-spacing: -0.1px;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    @media (max-width: 560px){
+      .kpi{ grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
 <body>
-  <h2>자기소개서 합격률 분석</h2>
-
-  <form id="essayForm">
-    <div class="row">
-      <label>회사 이름</label><br>
-      <input type="text" id="companyName" required placeholder="예: KOICA" />
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>AI 자기소개서 합격률 분석</h1>
+          <p>회사 인재상 + 합격 자소서 요약을 기반으로, 자소서를 점수/피드백으로 분석합니다.</p>
+        </div>
+      </div>
+      <div class="pill" title="현재 페이지 상태">
+        <span class="dot"></span>
+        <span>GitHub Pages에서 실행 중</span>
+      </div>
     </div>
 
-    <div class="row">
-      <label>회사 URL</label><br>
-      <input type="text" id="companyUrl" required placeholder="https://www.koica.go.kr/..." />
-      <div class="muted">URL은 https:// 로 시작해야 합니다.</div>
+    <div class="grid">
+      <!-- Left: Form -->
+      <div class="card">
+        <div class="cardHeader">
+          <h2>
+            입력
+            <span class="badge">회사/자소서</span>
+          </h2>
+        </div>
+        <div class="cardBody">
+          <form id="essayForm">
+            <div class="fieldRow">
+              <div>
+                <label for="companyName">회사 이름</label>
+                <input id="companyName" type="text" placeholder="예: KOICA" required />
+              </div>
+              <div>
+                <label for="companyUrl">회사 URL</label>
+                <input id="companyUrl" type="url" placeholder="https://www.koica.go.kr/..." required />
+                <div class="help">URL은 <span class="mini">https://</span> 로 시작해야 합니다.</div>
+              </div>
+            </div>
+
+            <div>
+              <label for="userEssay">자기소개서</label>
+              <textarea id="userEssay" placeholder="자기소개서 내용을 붙여넣으세요." required></textarea>
+            </div>
+
+            <div class="actions">
+              <div class="leftActions">
+                <button id="analyzeBtn" class="btn btnPrimary" type="submit">
+                  <span id="analyzeIcon">✨</span>
+                  <span id="analyzeText">분석하기</span>
+                </button>
+
+                <button id="sampleBtn" class="btn" type="button">🧩 예시 채우기</button>
+                <button id="clearBtn" class="btn btnDanger" type="button">🧹 초기화</button>
+              </div>
+
+              <div class="hintRight">
+                결과가 안 나오면 <span class="mini">CORS / URL</span> 설정을 확인하세요.
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right: Result -->
+      <div class="card rightCard">
+        <div class="resultTop">
+          <div style="min-width:0;">
+            <div class="scoreWrap">
+              <div class="score" id="scoreText">—</div>
+              <div class="scoreMeta" id="scoreMeta">점수/등급</div>
+            </div>
+            <div class="progress" aria-label="점수 진행바">
+              <div class="bar" id="bar"></div>
+            </div>
+          </div>
+          <div class="mini" id="statusText">대기 중</div>
+        </div>
+
+        <div class="resultBody">
+          <div class="resultText" id="resultBox">결과가 여기에 표시됩니다.</div>
+
+          <div class="resultActions">
+            <button id="copyBtn" class="btn" type="button">📋 결과 복사</button>
+            <button id="downloadBtn" class="btn" type="button">⬇️ 결과 TXT 저장</button>
+          </div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpiItem">
+            <div class="kpiLabel">회사</div>
+            <div class="kpiValue" id="kpiCompany">—</div>
+          </div>
+          <div class="kpiItem">
+            <div class="kpiLabel">URL</div>
+            <div class="kpiValue" id="kpiUrl">—</div>
+          </div>
+          <div class="kpiItem">
+            <div class="kpiLabel">문자 수</div>
+            <div class="kpiValue" id="kpiLen">—</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="row">
-      <label>자기소개서</label><br>
-      <textarea id="userEssay" required placeholder="자기소개서 내용을 붙여넣으세요."></textarea>
-    </div>
+    <div class="footer">© Essay Analyzer · 프론트는 GitHub Pages, 분석은 n8n Webhook으로 처리</div>
+  </div>
 
-    <button type="submit">분석하기</button>
-  </form>
-
-  <div id="resultBox">결과가 여기 표시됩니다.</div>
+  <div class="toast" id="toast"><span>✅</span><span id="toastMsg">복사 완료</span></div>
 
   <script>
-    const WEBHOOK_URL = "https://primary-production-b57a.up.railway.app/webhook/final_essay";
+    // ✅ 여기만 네가 "정상 동작 확인한" n8n Webhook URL로 유지하면 됨
+    const WEBHOOK_URL = "https://primary-production-b57a.up.railway.app/webhook/essay-score";
 
-    const form = document.getElementById("essayForm");
-    const resultBox = document.getElementById("resultBox");
+    const el = (id) => document.getElementById(id);
+
+    const form = el("essayForm");
+    const analyzeBtn = el("analyzeBtn");
+    const analyzeText = el("analyzeText");
+    const analyzeIcon = el("analyzeIcon");
+
+    const resultBox = el("resultBox");
+    const statusText = el("statusText");
+    const scoreText = el("scoreText");
+    const scoreMeta = el("scoreMeta");
+    const bar = el("bar");
+
+    const kpiCompany = el("kpiCompany");
+    const kpiUrl = el("kpiUrl");
+    const kpiLen = el("kpiLen");
+
+    const toast = el("toast");
+    const toastMsg = el("toastMsg");
+
+    const sampleBtn = el("sampleBtn");
+    const clearBtn = el("clearBtn");
+    const copyBtn = el("copyBtn");
+    const downloadBtn = el("downloadBtn");
+
+    function showToast(msg){
+      toastMsg.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1400);
+    }
+
+    function setLoading(isLoading){
+      analyzeBtn.disabled = isLoading;
+      if(isLoading){
+        analyzeIcon.innerHTML = '<span class="spinner"></span>';
+        analyzeText.textContent = "분석 중...";
+        statusText.textContent = "요청 중…";
+      } else {
+        analyzeIcon.textContent = "✨";
+        analyzeText.textContent = "분석하기";
+        statusText.textContent = "대기 중";
+      }
+    }
+
+    function updateKpi(){
+      const name = el("companyName").value.trim() || "—";
+      const url = el("companyUrl").value.trim() || "—";
+      const essay = el("userEssay").value || "";
+      kpiCompany.textContent = name;
+      kpiUrl.textContent = url;
+      kpiLen.textContent = essay ? `${essay.length.toLocaleString()}자` : "—";
+    }
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function parseScore(text){
+      // "자기소개서 점수: 75점" 패턴 우선
+      const m = text.match(/점수\s*[:：]\s*(\d{1,3})\s*점/);
+      if(m) return clamp(parseInt(m[1],10), 0, 100);
+      // "75점"만 있는 경우도 보조
+      const m2 = text.match(/(\d{1,3})\s*점/);
+      if(m2) return clamp(parseInt(m2[1],10), 0, 100);
+      return null;
+    }
+
+    function setScoreUI(score){
+      if(score === null){
+        scoreText.textContent = "—";
+        scoreMeta.textContent = "점수/등급";
+        bar.style.width = "0%";
+        return;
+      }
+      scoreText.textContent = score;
+      let grade = "보통";
+      if(score >= 85) grade = "높음";
+      else if(score >= 70) grade = "보통";
+      else grade = "낮음";
+      scoreMeta.textContent = `점 · 합격률 ${grade}`;
+      bar.style.width = `${score}%`;
+    }
+
+    async function safeReadText(res){
+      try { return await res.text(); } catch { return ""; }
+    }
+
+    function prettyError(status, text){
+      if(status === 0) return "요청 실패(CORS/네트워크). Webhook URL 또는 CORS 설정을 확인하세요.";
+      return `서버 에러 (${status})\n\n${text || ""}`.trim();
+    }
+
+    // 입력 변화 시 KPI 갱신
+    ["companyName","companyUrl","userEssay"].forEach(id=>{
+      el(id).addEventListener("input", updateKpi);
+    });
+    updateKpi();
+
+    sampleBtn.addEventListener("click", () => {
+      el("companyName").value = "KOICA";
+      el("companyUrl").value = "https://www.koica.go.kr/koica_kr/867/subview.do";
+      el("userEssay").value =
+`저는 항상 맡은 일을 성실하게 하려고 노력하는 사람입니다. 학교생활을 하면서 다양한 경험을 했고, 이를 통해 많은 것을 배웠습니다.
+특히 팀 프로젝트에 참여하면서 협력의 중요성을 알게 되었고, 어떤 일이든 최선을 다하는 자세가 필요하다고 느꼈습니다.
+지원한 직무에 대해서는 아직 많은 경험이 있는 것은 아니지만, 빠르게 배우고 적응할 자신이 있습니다.
+저는 책임감이 강하고 포기하지 않는 성격이기 때문에 회사에서도 꾸준히 성장하는 모습을 보여드리겠습니다.`;
+      updateKpi();
+      showToast("예시를 채웠어요");
+    });
+
+    clearBtn.addEventListener("click", () => {
+      form.reset();
+      resultBox.textContent = "결과가 여기에 표시됩니다.";
+      setScoreUI(null);
+      updateKpi();
+      showToast("초기화 완료");
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      const text = resultBox.textContent || "";
+      if(!text.trim()){ showToast("복사할 내용이 없어요"); return; }
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("결과를 복사했어요");
+      } catch {
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        showToast("결과를 복사했어요");
+      }
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      const text = resultBox.textContent || "";
+      if(!text.trim()){ showToast("저장할 내용이 없어요"); return; }
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "essay_result.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("TXT로 저장했어요");
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const payload = {
-        companyName: companyName.value.trim(),
-        companyUrl: companyUrl.value.trim(),
-        userEssay: userEssay.value
+        companyName: el("companyName").value.trim(),
+        companyUrl: el("companyUrl").value.trim(),
+        userEssay: el("userEssay").value
       };
 
-      if (!payload.companyName || !payload.companyUrl || !payload.userEssay) {
+      if(!payload.companyName || !payload.companyUrl || !payload.userEssay){
         resultBox.textContent = "모든 항목을 입력해주세요.";
+        setScoreUI(null);
         return;
       }
 
-      resultBox.textContent = "분석 중...";
+      setLoading(true);
+      resultBox.textContent = "분석 중입니다… 잠시만요.";
+      setScoreUI(null);
 
       try {
         const res = await fetch(WEBHOOK_URL, {
@@ -70,21 +672,33 @@
           body: JSON.stringify(payload)
         });
 
-        const text = await res.text();
+        const text = await safeReadText(res);
 
-        if (!res.ok) {
-          resultBox.textContent = `서버 에러 (${res.status})\n\n${text}`;
+        if(!res.ok){
+          resultBox.textContent = prettyError(res.status, text);
+          statusText.textContent = `실패 (${res.status})`;
+          setScoreUI(null);
+          setLoading(false);
           return;
         }
 
+        // n8n에서 { result: "..."} 로 주는 경우도 있고, 그냥 문자열일 수도 있음
+        let outText = text;
         try {
           const data = JSON.parse(text);
-          resultBox.textContent = data.result ?? text;
-        } catch {
-          resultBox.textContent = text;
-        }
+          outText = (data && (data.result || data.content)) ? (data.result || data.content) : text;
+        } catch { /* text 그대로 */ }
+
+        resultBox.textContent = outText;
+        statusText.textContent = "완료";
+        setScoreUI(parseScore(outText));
+        setLoading(false);
       } catch (err) {
-        resultBox.textContent = "요청 실패(CORS/네트워크). n8n에 CORS 헤더를 추가하세요.";
+        // CORS/네트워크 등으로 fetch 자체 실패
+        resultBox.textContent = "요청 실패(CORS/네트워크).\n\n1) WEBHOOK_URL이 맞는지\n2) n8n Webhook에 CORS 헤더가 있는지\n3) 워크플로우가 Active인지\n를 확인하세요.";
+        statusText.textContent = "요청 실패";
+        setScoreUI(null);
+        setLoading(false);
       }
     });
   </script>

@@ -5,44 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>AI 자기소개서 합격률 분석</title>
 
+  <!-- SUIT 폰트 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css">
+
   <style>
     :root{
-      --bg: #0b1020;
-      --card: rgba(255,255,255,.08);
-      --card2: rgba(255,255,255,.10);
       --border: rgba(255,255,255,.14);
       --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.70);
       --muted2: rgba(255,255,255,.55);
-      --shadow: 0 16px 50px rgba(0,0,0,.40);
+      --shadow: 0 16px 50px rgba(0,0,0,.35);
       --radius: 18px;
-      --radius2: 14px;
-      --accent: #7c3aed;
-      --accent2: #06b6d4;
       --danger: #ef4444;
       --ok: #22c55e;
-      --warn: #f59e0b;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
 
     * { box-sizing: border-box; }
     html, body { height: 100%; }
+
     body{
       margin: 0;
       color: var(--text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      font-family: "SUIT", system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
       background:
-        radial-gradient(1000px 600px at 15% 10%, rgba(124,58,237,.35), transparent 55%),
-        radial-gradient(900px 600px at 85% 15%, rgba(6,182,212,.25), transparent 55%),
-        radial-gradient(1000px 700px at 50% 120%, rgba(34,197,94,.10), transparent 55%),
-        linear-gradient(180deg, #080b16, #0b1020 30%, #090d1a);
+        radial-gradient(900px 520px at 12% 10%, rgba(124,58,237,.22), transparent 60%),
+        radial-gradient(820px 520px at 88% 12%, rgba(6,182,212,.18), transparent 60%),
+        radial-gradient(980px 620px at 50% 120%, rgba(34,197,94,.08), transparent 60%),
+        linear-gradient(180deg, #0b1020, #111a33 45%, #0b1020);
+      background-attachment: fixed;
       overflow-x: hidden;
+    }
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,.045), transparent 40%),
+        radial-gradient(circle at 80% 0%, rgba(255,255,255,.03), transparent 42%),
+        linear-gradient(transparent, rgba(0,0,0,.12));
+      mix-blend-mode: overlay;
+      opacity: .45;
     }
 
     .wrap{
+      position: relative;
       max-width: 1100px;
       margin: 0 auto;
       padding: 28px 18px 56px;
+    }
+
+    h1, h2{
+      font-weight: 600;
+      letter-spacing: -0.02em;
     }
 
     .topbar{
@@ -56,24 +70,36 @@
     .brand{
       display:flex; align-items:center; gap: 12px;
     }
+
     .logo{
       width: 42px; height: 42px;
       border-radius: 14px;
-      background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(6,182,212,.85));
-      box-shadow: 0 12px 30px rgba(124,58,237,.25);
+      background: linear-gradient(135deg, rgba(124,58,237,.90), rgba(6,182,212,.75));
+      box-shadow: 0 12px 26px rgba(124,58,237,.18);
       position: relative;
       overflow:hidden;
+      display:grid;
+      place-items:center;
     }
     .logo::after{
       content:"";
       position:absolute; inset:-30%;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.65), transparent 45%);
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.55), transparent 45%);
       transform: rotate(15deg);
+      pointer-events:none;
     }
+    .logo svg{
+      position: relative;
+      z-index: 2;
+      width: 22px;
+      height: 22px;
+      opacity: .95;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,.18));
+    }
+
     .brand h1{
       font-size: 18px;
       margin: 0;
-      letter-spacing: -0.2px;
       line-height: 1.1;
     }
     .brand p{
@@ -88,8 +114,8 @@
       border-radius: 999px;
       background: rgba(255,255,255,.07);
       border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 10px 22px rgba(0,0,0,.25);
-      color: var(--muted);
+      box-shadow: 0 10px 22px rgba(0,0,0,.20);
+      color: rgba(255,255,255,.72);
       font-size: 12.5px;
       user-select: none;
       white-space: nowrap;
@@ -98,16 +124,15 @@
       width: 9px; height: 9px;
       border-radius: 999px;
       background: var(--ok);
-      box-shadow: 0 0 0 6px rgba(34,197,94,.12);
+      box-shadow: 0 0 0 6px rgba(34,197,94,.10);
     }
 
     .grid{
       display:grid;
       grid-template-columns: 1.05fr .95fr;
       gap: 16px;
-      align-items:start;
+      align-items: stretch;
     }
-
     @media (max-width: 960px){
       .grid{ grid-template-columns: 1fr; }
       .pill{ display:none; }
@@ -115,36 +140,22 @@
 
     .card{
       border-radius: var(--radius);
-      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.05));
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       overflow: hidden;
-    }
-
-    .cardHeader{
-      padding: 16px 16px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
-    }
-    .cardHeader h2{
-      font-size: 14px;
-      margin: 0;
-      color: rgba(255,255,255,.90);
-      letter-spacing: -0.1px;
+      backdrop-filter: blur(10px);
       display:flex;
-      align-items:center;
-      gap: 10px;
-    }
-    .badge{
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.75);
+      flex-direction: column;
+      min-height: 100%;
     }
 
-    .cardBody{ padding: 16px; }
+    .cardBody{
+      padding: 16px;
+      flex: 1;
+      display:flex;
+      flex-direction: column;
+    }
 
     .fieldRow{
       display:grid;
@@ -152,6 +163,7 @@
       gap: 12px;
       margin-bottom: 12px;
     }
+    .fieldRow > div{ display:flex; flex-direction: column; }
     @media (max-width: 640px){
       .fieldRow{ grid-template-columns: 1fr; }
     }
@@ -159,29 +171,55 @@
     label{
       display:block;
       font-size: 12px;
-      color: var(--muted2);
+      color: rgba(255,255,255,.58);
       margin: 0 0 6px;
+      padding-left: 2px;
     }
+
+    input, textarea, button{
+      font-family: "SUIT", system-ui, -apple-system, sans-serif;
+    }
+
     input, textarea{
       width: 100%;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.25);
+      background: rgba(0,0,0,.20);
       color: var(--text);
       padding: 12px 12px;
       outline: none;
-      transition: border-color .15s ease, box-shadow .15s ease;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
       font-size: 14px;
     }
-    textarea{ min-height: 220px; resize: vertical; }
-    input:focus, textarea:focus{
-      border-color: rgba(124,58,237,.55);
-      box-shadow: 0 0 0 4px rgba(124,58,237,.18);
+
+    textarea#userEssay{
+      min-height: 360px;
+      resize: vertical;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,.22) transparent;
     }
-    .help{
-      margin-top: 6px;
-      font-size: 12px;
-      color: var(--muted2);
+    textarea#userEssay::-webkit-scrollbar{ width: 8px; }
+    textarea#userEssay::-webkit-scrollbar-track{ background: transparent; }
+    textarea#userEssay::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.20);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    textarea#userEssay::-webkit-scrollbar-thumb:hover{
+      background: rgba(255,255,255,.28);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    input:focus, textarea:focus{
+      border-color: rgba(124,58,237,.45);
+      box-shadow: 0 0 0 4px rgba(124,58,237,.14);
+      background: rgba(0,0,0,.24);
+    }
+
+    @media (max-width: 960px){
+      textarea#userEssay{ min-height: 300px; }
     }
 
     .actions{
@@ -190,7 +228,7 @@
       gap: 10px;
       margin-top: 14px;
       align-items:center;
-      justify-content: space-between;
+      justify-content: flex-start;
     }
     .leftActions{
       display:flex;
@@ -199,68 +237,76 @@
       align-items:center;
     }
 
+    /* ✅ 버튼 높이 완전 통일 (좌측 3개 + 우측 결과복사) */
     .btn{
+      height: 40px;
+      min-height: 40px;
+      line-height: 1;
+      padding: 0 14px;
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.07);
       color: var(--text);
-      padding: 10px 12px;
       border-radius: 14px;
       cursor: pointer;
-      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease, filter .15s ease;
       font-size: 13px;
       display:inline-flex;
       align-items:center;
+      justify-content:center;
       gap: 8px;
       user-select:none;
-    }
-    .btn:hover{
-      background: rgba(255,255,255,.09);
-      border-color: rgba(255,255,255,.20);
+      white-space: nowrap;
     }
     .btn:active{ transform: translateY(1px); }
+    .btn:hover{ border-color: rgba(255,255,255,.22); }
 
     .btnPrimary{
-      background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(6,182,212,.75));
-      border: 0;
-      box-shadow: 0 14px 30px rgba(124,58,237,.20);
+      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(135deg, rgba(124,58,237,.55), rgba(6,182,212,.32));
+      box-shadow: 0 14px 28px rgba(124,58,237,.10);
     }
-    .btnPrimary:hover{ filter: brightness(1.05); }
+    .btnPrimary:hover{
+      filter: brightness(1.06);
+      background: linear-gradient(135deg, rgba(124,58,237,.62), rgba(6,182,212,.36));
+    }
+
     .btnDanger{
       background: rgba(239,68,68,.12);
       border-color: rgba(239,68,68,.22);
       color: rgba(255,255,255,.92);
     }
 
-    .hintRight{
-      font-size: 12px;
-      color: var(--muted2);
+    .rightCard{
+      display:flex;
+      flex-direction: column;
     }
 
-    .rightCard .cardBody{ padding: 0; }
     .resultTop{
-      padding: 16px 16px 12px;
+      padding: 16px 16px 20px;
       border-bottom: 1px solid rgba(255,255,255,.10);
       background: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content: space-between;
       gap: 10px;
     }
+
     .scoreWrap{
       display:flex;
       align-items:baseline;
       gap: 10px;
       min-width: 0;
     }
+
     .score{
       font-size: 30px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: -0.7px;
       line-height: 1;
       white-space: nowrap;
     }
     .scoreMeta{
-      color: var(--muted2);
+      color: rgba(255,255,255,.60);
       font-size: 12.5px;
       white-space: nowrap;
     }
@@ -276,82 +322,50 @@
     .bar{
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, rgba(239,68,68,.85), rgba(245,158,11,.85), rgba(34,197,94,.85));
+      background: linear-gradient(90deg, rgba(239,68,68,.80), rgba(245,158,11,.80), rgba(34,197,94,.80));
       border-radius: 999px;
       transition: width .45s ease;
     }
 
     .resultBody{
+      position: relative;
       padding: 16px;
+      flex: 1;
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
     }
+
+    /* ✅ 오른쪽 출력칸 영역을 5px 내려서 좌측 textarea 상/하단 라인 맞춤 */
+    .rightCard .resultBody{
+      margin-top: 10px;
+    }
+
     .resultText{
       white-space: pre-wrap;
       line-height: 1.65;
       font-size: 14px;
       color: rgba(255,255,255,.88);
-      background: rgba(0,0,0,.18);
+      background: rgba(0,0,0,.16);
       border: 1px solid rgba(255,255,255,.10);
       border-radius: 16px;
       padding: 14px;
-      min-height: 230px;
+      min-height: 360px;
+      flex: 1;
+    }
+    @media (max-width: 960px){
+      .resultText{ min-height: 300px; }
     }
 
     .resultActions{
       display:flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background: rgba(15,23,42,.92);
-      border: 1px solid rgba(255,255,255,.14);
-      color: rgba(255,255,255,.92);
-      padding: 10px 12px;
-      border-radius: 999px;
-      box-shadow: 0 18px 40px rgba(0,0,0,.45);
-      font-size: 13px;
-      opacity: 0;
-      pointer-events:none;
-      transition: opacity .2s ease, transform .2s ease;
-      display:flex;
-      align-items:center;
-      gap: 8px;
-    }
-    .toast.show{
-      opacity: 1;
-      transform: translateX(-50%) translateY(-6px);
-    }
-
-    .spinner{
-      width: 14px; height: 14px;
-      border-radius: 999px;
-      border: 2px solid rgba(255,255,255,.35);
-      border-top-color: rgba(255,255,255,.95);
-      animation: spin 0.85s linear infinite;
-    }
-    @keyframes spin{ to { transform: rotate(360deg); } }
-
-    .mini{
-      font-family: var(--mono);
-      font-size: 11.5px;
-      color: rgba(255,255,255,.65);
-    }
-
-    .footer{
-      margin-top: 14px;
-      color: rgba(255,255,255,.45);
-      font-size: 12px;
-      text-align: center;
     }
 
     .kpi{
       display:grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       padding: 16px;
       border-top: 1px solid rgba(255,255,255,.10);
@@ -360,7 +374,7 @@
     .kpiItem{
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.12);
+      background: rgba(0,0,0,.10);
       padding: 12px;
       min-height: 68px;
     }
@@ -381,6 +395,67 @@
     @media (max-width: 560px){
       .kpi{ grid-template-columns: 1fr; }
     }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(15,23,42,.92);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.92);
+      padding: 10px 12px;
+      border-radius: 999px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .2s ease, transform .2s ease;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      z-index: 50;
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-6px);
+    }
+
+    .overlay{
+      position:absolute;
+      inset: 16px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.32);
+      border: 1px solid rgba(255,255,255,.10);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      backdrop-filter: blur(8px);
+      z-index: 5;
+    }
+    .overlay.show{ display:flex; }
+
+    .spinner{
+      width: 14px; height: 14px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: rgba(255,255,255,.95);
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin{ to { transform: rotate(360deg); } }
+
+    .overlayText{
+      font-size: 12.5px;
+      color: rgba(255,255,255,.86);
+    }
+
+    .footer{
+      margin-top: 14px;
+      color: rgba(255,255,255,.50);
+      font-size: 12px;
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -388,7 +463,14 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <div class="logo"></div>
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M7 3.75h6.2c.4 0 .78.16 1.06.44l2.55 2.55c.28.28.44.66.44 1.06V18.5A1.75 1.75 0 0 1 15.5 20.25H7A1.75 1.75 0 0 1 5.25 18.5V5.5A1.75 1.75 0 0 1 7 3.75Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6" />
+            <path d="M13.25 3.9V7.2c0 .55.45 1 1 1h3.3" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M9 10.2h5.4M9 13h6.2M9 15.8h4.2" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M18.7 12.1l.35 1.05c.07.22.24.39.46.46l1.05.35-1.05.35a.72.72 0 0 0-.46.46l-.35 1.05-.35-1.05a.72.72 0 0 0-.46-.46l-1.05-.35 1.05-.35c.22-.07.39-.24.46-.46l.35-1.05Z" fill="rgba(255,255,255,.9)"/>
+          </svg>
+        </div>
         <div>
           <h1>AI 자기소개서 합격률 분석</h1>
           <p>회사 인재상 + 합격 자소서 요약을 기반으로, 자소서를 점수/피드백으로 분석합니다.</p>
@@ -401,14 +483,8 @@
     </div>
 
     <div class="grid">
-      <!-- Left: Form -->
+      <!-- Left -->
       <div class="card">
-        <div class="cardHeader">
-          <h2>
-            입력
-            <span class="badge">회사/자소서</span>
-          </h2>
-        </div>
         <div class="cardBody">
           <form id="essayForm">
             <div class="fieldRow">
@@ -417,9 +493,8 @@
                 <input id="companyName" type="text" placeholder="예: KOICA" required />
               </div>
               <div>
-                <label for="companyUrl">회사 URL</label>
-                <input id="companyUrl" type="url" placeholder="https://www.koica.go.kr/..." required />
-                <div class="help">URL은 <span class="mini">https://</span> 로 시작해야 합니다.</div>
+                <label for="companyUrl">회사 인재상 URL</label>
+                <input id="companyUrl" type="url" placeholder="https://..." required />
               </div>
             </div>
 
@@ -438,16 +513,12 @@
                 <button id="sampleBtn" class="btn" type="button">🧩 예시 채우기</button>
                 <button id="clearBtn" class="btn btnDanger" type="button">🧹 초기화</button>
               </div>
-
-              <div class="hintRight">
-                결과가 안 나오면 <span class="mini">CORS / URL</span> 설정을 확인하세요.
-              </div>
             </div>
           </form>
         </div>
       </div>
 
-      <!-- Right: Result -->
+      <!-- Right -->
       <div class="card rightCard">
         <div class="resultTop">
           <div style="min-width:0;">
@@ -459,15 +530,18 @@
               <div class="bar" id="bar"></div>
             </div>
           </div>
-          <div class="mini" id="statusText">대기 중</div>
         </div>
 
         <div class="resultBody">
+          <div class="overlay" id="loadingOverlay">
+            <span class="spinner"></span>
+            <span class="overlayText">분석 중…</span>
+          </div>
+
           <div class="resultText" id="resultBox">결과가 여기에 표시됩니다.</div>
 
           <div class="resultActions">
             <button id="copyBtn" class="btn" type="button">📋 결과 복사</button>
-            <button id="downloadBtn" class="btn" type="button">⬇️ 결과 TXT 저장</button>
           </div>
         </div>
 
@@ -477,10 +551,6 @@
             <div class="kpiValue" id="kpiCompany">—</div>
           </div>
           <div class="kpiItem">
-            <div class="kpiLabel">URL</div>
-            <div class="kpiValue" id="kpiUrl">—</div>
-          </div>
-          <div class="kpiItem">
             <div class="kpiLabel">문자 수</div>
             <div class="kpiValue" id="kpiLen">—</div>
           </div>
@@ -488,13 +558,12 @@
       </div>
     </div>
 
-    <div class="footer">© Essay Analyzer · 프론트는 GitHub Pages, 분석은 n8n Webhook으로 처리</div>
+    <div class="footer">© AI Essay Analyzer · Frontend on GitHub Pages · Powered by n8n</div>
   </div>
 
   <div class="toast" id="toast"><span>✅</span><span id="toastMsg">복사 완료</span></div>
 
   <script>
-    // ✅ 여기만 네가 "정상 동작 확인한" n8n Webhook URL로 유지하면 됨
     const WEBHOOK_URL = "https://primary-production-b57a.up.railway.app/webhook/final_essay";
 
     const el = (id) => document.getElementById(id);
@@ -502,16 +571,14 @@
     const form = el("essayForm");
     const analyzeBtn = el("analyzeBtn");
     const analyzeText = el("analyzeText");
-    const analyzeIcon = el("analyzeIcon");
+    const analyzeIcon = el("analyzeIcon"); // 아이콘 고정
 
     const resultBox = el("resultBox");
-    const statusText = el("statusText");
     const scoreText = el("scoreText");
     const scoreMeta = el("scoreMeta");
     const bar = el("bar");
 
     const kpiCompany = el("kpiCompany");
-    const kpiUrl = el("kpiUrl");
     const kpiLen = el("kpiLen");
 
     const toast = el("toast");
@@ -520,7 +587,8 @@
     const sampleBtn = el("sampleBtn");
     const clearBtn = el("clearBtn");
     const copyBtn = el("copyBtn");
-    const downloadBtn = el("downloadBtn");
+
+    const loadingOverlay = el("loadingOverlay");
 
     function showToast(msg){
       toastMsg.textContent = msg;
@@ -528,35 +596,28 @@
       setTimeout(() => toast.classList.remove("show"), 1400);
     }
 
+    // ✅ 분석 중에도 버튼 텍스트는 "분석하기" 유지
     function setLoading(isLoading){
       analyzeBtn.disabled = isLoading;
       if(isLoading){
-        analyzeIcon.innerHTML = '<span class="spinner"></span>';
-        analyzeText.textContent = "분석 중...";
-        statusText.textContent = "요청 중…";
+        loadingOverlay.classList.add("show");
       } else {
-        analyzeIcon.textContent = "✨";
-        analyzeText.textContent = "분석하기";
-        statusText.textContent = "대기 중";
+        loadingOverlay.classList.remove("show");
       }
     }
 
     function updateKpi(){
       const name = el("companyName").value.trim() || "—";
-      const url = el("companyUrl").value.trim() || "—";
       const essay = el("userEssay").value || "";
       kpiCompany.textContent = name;
-      kpiUrl.textContent = url;
       kpiLen.textContent = essay ? `${essay.length.toLocaleString()}자` : "—";
     }
 
     function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
     function parseScore(text){
-      // "자기소개서 점수: 75점" 패턴 우선
       const m = text.match(/점수\s*[:：]\s*(\d{1,3})\s*점/);
       if(m) return clamp(parseInt(m[1],10), 0, 100);
-      // "75점"만 있는 경우도 보조
       const m2 = text.match(/(\d{1,3})\s*점/);
       if(m2) return clamp(parseInt(m2[1],10), 0, 100);
       return null;
@@ -587,7 +648,6 @@
       return `서버 에러 (${status})\n\n${text || ""}`.trim();
     }
 
-    // 입력 변화 시 KPI 갱신
     ["companyName","companyUrl","userEssay"].forEach(id=>{
       el(id).addEventListener("input", updateKpi);
     });
@@ -597,10 +657,10 @@
       el("companyName").value = "KOICA";
       el("companyUrl").value = "https://www.koica.go.kr/koica_kr/867/subview.do";
       el("userEssay").value =
-`저는 항상 맡은 일을 성실하게 하려고 노력하는 사람입니다. 학교생활을 하면서 다양한 경험을 했고, 이를 통해 많은 것을 배웠습니다.
-특히 팀 프로젝트에 참여하면서 협력의 중요성을 알게 되었고, 어떤 일이든 최선을 다하는 자세가 필요하다고 느꼈습니다.
-지원한 직무에 대해서는 아직 많은 경험이 있는 것은 아니지만, 빠르게 배우고 적응할 자신이 있습니다.
-저는 책임감이 강하고 포기하지 않는 성격이기 때문에 회사에서도 꾸준히 성장하는 모습을 보여드리겠습니다.`;
+`저는 항상 맡은 일을 성실하게 하려고 노력하는 사람입니다. 학교생활을 하면서 다양한 경험을 했고, 이를 통해 많은 것을 배웠습니다.특히 팀 프로젝트에 참여하면서 협력의 중요성을 알게 되었고, 어떤 일이든 최선을 다하는 자세가 필요하다고 느꼈습니다.
+
+
+지원한 직무에 대해서는 아직 많은 경험이 있는 것은 아니지만, 빠르게 배우고 적응할 자신이 있습니다. 저는 책임감이 강하고 포기하지 않는 성격이기 때문에 회사에서도 꾸준히 성장하는 모습을 보여드리겠습니다.`;
       updateKpi();
       showToast("예시를 채웠어요");
     });
@@ -620,7 +680,6 @@
         await navigator.clipboard.writeText(text);
         showToast("결과를 복사했어요");
       } catch {
-        // fallback
         const ta = document.createElement("textarea");
         ta.value = text;
         document.body.appendChild(ta);
@@ -629,21 +688,6 @@
         document.body.removeChild(ta);
         showToast("결과를 복사했어요");
       }
-    });
-
-    downloadBtn.addEventListener("click", () => {
-      const text = resultBox.textContent || "";
-      if(!text.trim()){ showToast("저장할 내용이 없어요"); return; }
-      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "essay_result.txt";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      showToast("TXT로 저장했어요");
     });
 
     form.addEventListener("submit", async (e) => {
@@ -662,7 +706,6 @@
       }
 
       setLoading(true);
-      resultBox.textContent = "분석 중입니다… 잠시만요.";
       setScoreUI(null);
 
       try {
@@ -676,27 +719,23 @@
 
         if(!res.ok){
           resultBox.textContent = prettyError(res.status, text);
-          statusText.textContent = `실패 (${res.status})`;
           setScoreUI(null);
           setLoading(false);
           return;
         }
 
-        // n8n에서 { result: "..."} 로 주는 경우도 있고, 그냥 문자열일 수도 있음
         let outText = text;
         try {
           const data = JSON.parse(text);
           outText = (data && (data.result || data.content)) ? (data.result || data.content) : text;
-        } catch { /* text 그대로 */ }
+        } catch {}
 
         resultBox.textContent = outText;
-        statusText.textContent = "완료";
         setScoreUI(parseScore(outText));
         setLoading(false);
       } catch (err) {
-        // CORS/네트워크 등으로 fetch 자체 실패
-        resultBox.textContent = "요청 실패(CORS/네트워크).\n\n1) WEBHOOK_URL이 맞는지\n2) n8n Webhook에 CORS 헤더가 있는지\n3) 워크플로우가 Active인지\n를 확인하세요.";
-        statusText.textContent = "요청 실패";
+        resultBox.textContent =
+"요청 실패(CORS/네트워크).\n\n1) WEBHOOK_URL이 맞는지\n2) n8n Webhook에 CORS 헤더가 있는지\n3) 워크플로우가 Active인지\n를 확인하세요.";
         setScoreUI(null);
         setLoading(false);
       }
